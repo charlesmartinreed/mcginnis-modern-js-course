@@ -1,5 +1,5 @@
-var React = require('react');
-var PropTypes = require('prop-types');
+const React = require('react');
+const PropTypes = require('prop-types');
 
 var styles = {
 	content: {
@@ -16,26 +16,13 @@ class Loading extends React.Component {
 			text: props.text,
 		}
 	}
-	// when manipulating previous state, pass prevState into setState method.
 
 	componentDidMount() {
-		var stoppper = this.props.text + '...';
+		const { text, speed } = this.props;
+		const stoppper = text + '...';
 
-		this.interval = window.setInterval(function() {
-			if(this.state.text === stoppper) {
-				this.setState(function() {
-					return {
-						text: this.props.text
-					}
-				})
-			} else {
-				this.setState(function(prevState) {
-					return {
-						text: prevState.text + '.'
-					}
-				})
-			}
-		}.bind(this), this.props.speed)
+		this.interval = window.setInterval(() => {
+			this.state.text === stoppper ? this.setState(() => ({ text: this.props.text })) : this.setState((prevState) => ({ text: prevState.text + '.'}))}, speed)
 	}
 
 	// remove the setInterval call
