@@ -1,15 +1,15 @@
-var React = require('react');
-var Popular = require('./Popular');
+const React = require('react');
+const Popular = require('./Popular');
 
-var ReactRouter = require('react-router-dom');
-var Router = ReactRouter.BrowserRouter;
-var Route = ReactRouter.Route;
-var Switch = ReactRouter.Switch;
+const ReactRouter = require('react-router-dom');
+const Router = ReactRouter.BrowserRouter;
+const Route = ReactRouter.Route;
+const Switch = ReactRouter.Switch;
 
-var Nav = require('./Nav');
-var Home = require('./Home');
-var Battle = require('./Battle');
-var Results = require('./Results');
+const Nav = require('./Nav');
+const Home = require('./Home');
+const Battle = require('./Battle');
+const Results = require('./Results');
 
 // in the Switch component, if all other routes aren't active, the page path isn't a page we serve up. Instead we render 'Not Found'
 class App extends React.Component {
@@ -24,9 +24,9 @@ class App extends React.Component {
 					<Route exact path='/battle' component={Battle} />
 					<Route path='/battle/results' component={Results} />
 					<Route path='/popular' component={Popular} />
-					<Route render={function() {
-						return <p>Not Found</p>
-					}} />
+					<Route render={() => (
+						<p>Not Found</p>
+					)} />
 				</Switch>
 			</div>
 			</Router>

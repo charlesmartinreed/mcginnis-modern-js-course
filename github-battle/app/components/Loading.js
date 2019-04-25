@@ -27,7 +27,6 @@ class Loading extends React.Component {
 
 	// remove the setInterval call
 	componentWillUnmount() {
-			console.log('interval cleared');
 			window.clearInterval(this.interval);
 	}
 
