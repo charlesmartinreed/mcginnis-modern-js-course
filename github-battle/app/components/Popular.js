@@ -54,14 +54,9 @@ RepoGrid.propTypes = {
 }
 
 class Popular extends React.Component {
-	constructor(props) {
-		super(props)
-		this.state = {
-			selectedLanguage: 'All',
-			repos: null
-		}
-		/* remember that update lanuage is not automagically bound to the this keyword that corresponds to our Popular component instance. Now it is.*/
-		this.updateLanguage = this.updateLanguage.bind(this);
+	state = {
+		selectedLanguage: 'All',
+		repos: null
 	}
 
 	componentDidMount() {
@@ -69,7 +64,7 @@ class Popular extends React.Component {
 		this.updateLanguage(this.state.selectedLanguage);
 	}
 
-	updateLanguage(lang) {
+	updateLanguage = (lang) => {
 		this.setState(() =>({ selectedLanguage: lang, repos: null}))
 
 		/* again, because we're making another function inside of then, the 'this' in this.setState won't be what we might expect. We bind to tell the function which 'this' should apply here */
