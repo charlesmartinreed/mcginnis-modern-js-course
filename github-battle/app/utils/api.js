@@ -1,25 +1,24 @@
 //async/await is supported via @babel/polyfill
 
-import axios from 'axios';
-
 // github id stuff, in case you find yourself being rate limited
 const id = "YOUR_CLIENT_ID";
 const sec = "YOUR_SECRET_ID";
 // const params = `?client_id=${id}&client_secret=${sec}`;
 
 async function getProfile(username) {
-	const profile = await axios.get(`https://api.github.com/users/${username}`);
-	return profile.data;
+	const response = await fetch(`https://api.github.com/users/${username}`);
+	return response.json()
 }
 
-function getRepos(username) {
- 	return axios.get(`https://api.github.com/users/${username}/repos?page=1&per_page=100`)
+async function getRepos(username) {
+ 	const response = await fetch(`https://api.github.com/users/${username}/repos?page=1&per_page=100`);
+	return response.json();
 }
 
 // count is the initialValue, 0 since we passed in '0'
 // repo is the array from which we pull our accumulator values
 function getStarCount(repos) {
-	return repos.data.reduce((count, { stargazers_count }) => count + stargazers_count, 0);
+	return repos.reduce((count, { stargazers_count }) => count + stargazers_count, 0);
 }
 
 function calculateScore({ followers }, repos) {
@@ -62,10 +61,11 @@ export async function battle (players) {
 export async function fetchPopularRepos(language) {
 	const encodedURI = window.encodeURI(`https://api.github.com/search/repositories?q=stars:>1+language:${language}&sort=stars&order=desc&type=Repositories`);
 
-	const repos = await axios.get(encodedURI)
+	const response = await fetch(encodedURI)
+	const repos = await response.json();
 
 	try {
-		return repos.data.items;
+		return repos.items;
 	} catch (error) {
 		handleError(error)
 	}
