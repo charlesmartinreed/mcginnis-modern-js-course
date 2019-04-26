@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios';
 
 // github id stuff, in case you find yourself being rate limited
 const id = "YOUR_CLIENT_ID";
@@ -42,16 +42,14 @@ function sortPlayers(players) {
 	return players.sort((a, b) => b.score - a.score)
 }
 
-module.exports = {
-	battle: (players) => {
-		return Promise.all(players.map(getUserData))
-			.then(sortPlayers)
-			.catch(handleError)
-	},
+export function battle (players) {
+	return Promise.all(players.map(getUserData))
+		.then(sortPlayers)
+		.catch(handleError)
+}
 
-	fetchPopularRepos: (language) => {
-		const encodedURI = window.encodeURI(`https://api.github.com/search/repositories?q=stars:>1+language:${language}&sort=stars&order=desc&type=Repositories`);
+export function fetchPopularRepos(language) {
+	const encodedURI = window.encodeURI(`https://api.github.com/search/repositories?q=stars:>1+language:${language}&sort=stars&order=desc&type=Repositories`);
 
-		return axios.get(encodedURI).then(({data}) => data.items);
-	}
+	return axios.get(encodedURI).then(({data}) => data.items);
 }

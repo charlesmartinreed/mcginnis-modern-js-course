@@ -1,9 +1,11 @@
-var React = require('react');
-var NavLink = require('react-router-dom').NavLink;
+import React from 'react';
+// named import because we don't care about the entire object, just the NavLink
+import { NavLink } from 'react-router-dom';
+
 
 // NavLink allows you to dynamically style the link based on whether or not the link is active
 
-function Nav() {
+export default function Nav() {
 			/* exact keeps home from being active when using battle, popular paths */
 	return (
 		<ul className="nav">
@@ -26,5 +28,3 @@ function Nav() {
 		</ul>
 	)
 }
-
-module.exports = Nav;

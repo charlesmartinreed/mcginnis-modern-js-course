@@ -1,7 +1,7 @@
-const React = require('react');
-const PropTypes = require('prop-types');
-const api = require('../utils/api');
-const Loading = require('./Loading');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { fetchPopularRepos } from '../utils/api';
+import Loading from './Loading';
 
 // stateless functional component
 function SelectLanguage( { selectedLanguage, onSelect} ) {
@@ -73,7 +73,7 @@ class Popular extends React.Component {
 		this.setState(() =>({ selectedLanguage: lang, repos: null}))
 
 		/* again, because we're making another function inside of then, the 'this' in this.setState won't be what we might expect. We bind to tell the function which 'this' should apply here */
-		api.fetchPopularRepos(lang)
+		fetchPopularRepos(lang)
 		.then((repos) => this.setState(() => ({ repos })));
 }
 
@@ -91,4 +91,4 @@ class Popular extends React.Component {
 	}
 }
 
-module.exports = Popular;
+export default Popular;
