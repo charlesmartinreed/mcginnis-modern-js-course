@@ -64,12 +64,11 @@ class Popular extends React.Component {
 		this.updateLanguage(this.state.selectedLanguage);
 	}
 
-	updateLanguage = (lang) => {
-		this.setState(() =>({ selectedLanguage: lang, repos: null}))
+	updateLanguage = async (lang) => {
+		this.setState(() =>({ selectedLanguage: lang, repos: null}));
 
-		/* again, because we're making another function inside of then, the 'this' in this.setState won't be what we might expect. We bind to tell the function which 'this' should apply here */
-		fetchPopularRepos(lang)
-		.then((repos) => this.setState(() => ({ repos })));
+		const repos = await fetchPopularRepos(lang);
+		this.setState(() => ({ repos }));
 }
 
 	render() {

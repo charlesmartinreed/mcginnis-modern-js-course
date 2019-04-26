@@ -1,3 +1,5 @@
+//async/await is supported via @babel/polyfill
+
 import axios from 'axios';
 
 // github id stuff, in case you find yourself being rate limited
@@ -5,13 +7,13 @@ const id = "YOUR_CLIENT_ID";
 const sec = "YOUR_SECRET_ID";
 // const params = `?client_id=${id}&client_secret=${sec}`;
 
-function getProfile(username) {
-	return axios.get(`https://api.github.com/users/${username}`)
-		.then(({data}) => data)
+async function getProfile(username) {
+	const profile = await axios.get(`https://api.github.com/users/${username}`);
+	return profile.data;
 }
 
 function getRepos(username) {
-	return axios.get(`https://api.github.com/users/${username}/repos?page=1&per_page=100`)
+ 	return axios.get(`https://api.github.com/users/${username}/repos?page=1&per_page=100`)
 }
 
 // count is the initialValue, 0 since we passed in '0'
@@ -30,11 +32,16 @@ function handleError(error) {
 }
 
 // If we're ging to use Promise, we need a Polyfill because the browser might not have a primitive to which we can attach a Promise - using @babel/polyfill
-function getUserData(player) {
-	return Promise.all([
+async function getUserData(player) {
+	const [ profile, repos ] = await Promise.all([
 		getProfile(player),
 		getRepos(player)
-	]).then(([ profile, repos]) => ({ profile, score: calculateScore(profile, repos)}));
+	])
+
+	return {
+		profile,
+		score: calculateScore(profile, repos)
+	}
 }
 
 
@@ -42,14 +49,25 @@ function sortPlayers(players) {
 	return players.sort((a, b) => b.score - a.score)
 }
 
-export function battle (players) {
-	return Promise.all(players.map(getUserData))
-		.then(sortPlayers)
-		.catch(handleError)
+export async function battle (players) {
+	const results = await Promise.all(players.map(getUserData))
+
+	try {
+		return results === null ? results : sortPlayers(results);
+	} catch (error) {
+		handleError(error)
+	}
 }
 
-export function fetchPopularRepos(language) {
+export async function fetchPopularRepos(language) {
 	const encodedURI = window.encodeURI(`https://api.github.com/search/repositories?q=stars:>1+language:${language}&sort=stars&order=desc&type=Repositories`);
 
-	return axios.get(encodedURI).then(({data}) => data.items);
+	const repos = await axios.get(encodedURI)
+
+	try {
+		return repos.data.items;
+	} catch (error) {
+		handleError(error)
+	}
+
 }
